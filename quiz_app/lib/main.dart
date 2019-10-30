@@ -1,56 +1,81 @@
 import 'package:flutter/material.dart';
 
+import './quiz.dart';
+import './result.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() {
-    
-    return MyAppState();
+    return _MyAppState();
   }
 }
 
-class MyAppState extends State<MyApp> {
-  var questionIndex = 0;
-  void answerQuestion() {
+class _MyAppState extends State<MyApp> {
+  var _questionIndex = 0;
+  var _totalScore = 0;
+
+  void _resetQuiz() {
     setState(() {
-      questionIndex = questionIndex+1;
+      _questionIndex = 0;
+      _totalScore = 0;
     });
-    print("Answer 1 choosen !");
   }
-  var questions = [
-      'What\'s your favorite color?',
-      'What\'s your favorite animal?',
-    ];
+
+  void _answerQuestion(int score) {
+    _totalScore += score;
+    setState(() {
+      _questionIndex = _questionIndex + 1;
+    });
+
+    if (_questionIndex < _questions.length) {}
+  }
+
+  final _questions = const [
+    {
+      'questionText': 'What\'s your favorite color?',
+      'answers': [
+        {'text': 'Black', 'score': 10},
+        {'text': 'Red', 'score': 7},
+        {'text': 'Green', 'score': 3},
+        {'text': 'White', 'score': 0},
+      ]
+    },
+    {
+      'questionText': 'What\'s your favorite animal?',
+      'answers': [
+        {'text': 'Cat', 'score': 10},
+        {'text': 'Rabbit', 'score': 7},
+        {'text': 'Lion', 'score': 3},
+        {'text': 'Dog', 'score': 0},
+      ]
+    },
+    {
+      'questionText': 'Who\'s your favorite entrepreneur?',
+      'answers': [
+        {'text': 'Mark Zuckerberg', 'score': 10},
+        {'text': 'Walt Disney', 'score': 7},
+        {'text': 'Bill Gates', 'score': 3},
+        {'text': 'Steve Jobs', 'score': 0},
+      ]
+    }
+  ];
 
   @override
   Widget build(BuildContext context) {
-    
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text("My First App"),
         ),
-        body: Column(
-          children: <Widget>[
-            Text(questions[questionIndex]),
-            RaisedButton(
-              child: Text("Answer 1"),
-              onPressed: answerQuestion,
-            ),
-            RaisedButton(
-              child: Text("Answer 2"),
-              onPressed: () => print("Answer 2 choosen!"),
-            ),
-            RaisedButton(
-              child: Text("Answer 3"),
-              onPressed: () {
-                print("Answer 4 choosen !!!");
-              },
-            ),
-          ],
-        ),
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                answerQuestion: _answerQuestion,
+                questionIndex: _questionIndex,
+                questions: _questions,
+              )
+            : Results(_totalScore, _resetQuiz),
       ),
     );
   }
