@@ -28,8 +28,6 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _questionIndex = _questionIndex + 1;
     });
-
-    if (_questionIndex < _questions.length) {}
   }
 
   final _questions = const [
